@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  front:
+    build:
+      context: ./front
+    ports:
+      - "8080:80"  # Expone el puerto 8080 en tu máquina local, redirigido al puerto 80 del contenedor
+    depends_on:
+      - db       # Espera que la base de datos esté lista
+      - back     # Espera que el backend esté listo
+
+  db:
+    build:
+      context: ./db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nombres
+    ports:
+      - "3307:3306"  # Mapea el puerto 3306 del contenedor al 3307 de tu máquina local
+
+  back:
+    build:
+      context: ./back
+    depends_on:
+      - db  # Asegura que la base de datos esté disponible
+    ports:
+      - "8000:80"  # Mapea el puerto 80 del contenedor al puerto 8000 local para acceder al backend
